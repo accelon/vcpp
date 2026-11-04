@@ -25,6 +25,12 @@ const TITLE = '金剛經合注';
 const SUB_PLAIN = '姚秦 鳩摩羅什譯 · 別譯十一種 · 四十一家注疏 · 昭明三十二分';
 const SUB_KEPAN = '11 種別譯 · 41 家注疏 · 3 家科判';
 
-run('build-vcpp.mjs', ['--out', path.join(HERE, 'vcpp-nokepan.html'), '--title', TITLE, '--sub', SUB_PLAIN, ...extra]);
-run('build-vcpp-kepan.mjs', ['--title', TITLE, '--sub', SUB_KEPAN, ...extra]);
+// 輕量版要保留全文的 work（印順《般若經講記》）
+const KEEP = 'Y01';
+const DESC = '羅什譯《金剛經》配昭明三十二分，十一種別譯、四十一家注疏、梵藏逐詞；' +
+  '加上昭明／江味農／印順／宗密四套科判，科文與經文雙向連動，科文另存、離文標註。純靜態單頁。';
+
+run('build-vcpp.mjs', ['--out', path.join(HERE, 'vcpp-nokepan.html'),
+  '--title', TITLE, '--sub', SUB_PLAIN, '--keep', KEEP, ...extra]);
+run('build-vcpp-kepan.mjs', ['--title', TITLE, '--sub', SUB_KEPAN, '--desc', DESC, '--keep', KEEP, ...extra]);
 console.log('完成：vcpp-nokepan.html、vcpp-kepan.html');
