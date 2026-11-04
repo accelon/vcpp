@@ -621,6 +621,13 @@ const data = {
     sub: '姚秦 鳩摩羅什譯 · 別譯十一種 · 四十一家注疏 · 昭明三十二分',
     // 某一句的延伸連結（第 38 句的書證長文）
     links: { '38': { href: 'shuzheng-u38.md', text: '書證' } },
+    // 頁尾（發起人／聯絡方式）：每個數據工作區自己決定
+    foot: {
+      free: '免費軟件',
+      sponsor: { text: '杭州繪欣堂科技公司', url: 'https://shutonggui.cn/huixintang/', after: '製作' },
+      contact: '聯絡人：魏秀秀（湛覺）',
+      wechat: { id: 'wxx68174671', note: '金剛經合注' },
+    },
   },
   sections: fen.map((f) => ({ n: f.n, title: f.title })),
   versions: versions.map((v) => ({
