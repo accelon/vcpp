@@ -32,6 +32,6 @@ const DESC = '羅什譯《金剛經》配昭明三十二分，十一種別譯、
   '加上昭明／江味農／印順／宗密四套科判，科文與經文雙向連動，科文另存、離文標註。純靜態單頁。';
 
 // --start：PWA 的 start_url；成品就叫 vcpp.html，部署原樣上傳
-run('build-vcpp-kepan.mjs', ['--out', path.join(HERE, 'vcpp.html'), '--start', 'vcpp.html',
+run('build-kepan.mjs', ['--out', path.join(HERE, 'vcpp.html'), '--start', 'vcpp.html',
   '--title', TITLE, '--sub', SUB, '--desc', DESC, '--keep', KEEP, ...extra]);
 console.log('完成：vcpp.html');
