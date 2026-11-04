@@ -5,6 +5,10 @@ vendor/
 # 建置產物（node build-vcpp.mjs、build-vcpp-kepan.mjs 產生）
 vcpp*.html
 vcpp.html.gz
+*.webmanifest
+sw.js
+icon-192.png
+icon-512.png
 
 # 資料管線的中間檔（可重跑產生）
 build/_pdf-u.json

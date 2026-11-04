@@ -1,4 +1,4 @@
-// 驗 vcpp-kepan.html：科文條／目錄／字元級標記／聯動，並截圖。
+// 驗 vcpp.html：科文條／目錄／字元級標記／聯動，並截圖。
 //   node build/cdp-kepan.mjs [url] [outdir]
 // 會依序做：
 //   1. 載入、等經文
@@ -15,7 +15,7 @@ import os from 'node:os';
 
 const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const args = process.argv.slice(2);
-const url = args[0] || 'file:///D:/2026/zhu-combined/vcpp-kepan.html';
+const url = args[0] || 'file:///D:/2026/vcpp/vcpp.html';
 const OUT = args[1] || 'D:\\2026\\zhu-combined\\screenshots';
 fs.mkdirSync(OUT, { recursive: true });
 

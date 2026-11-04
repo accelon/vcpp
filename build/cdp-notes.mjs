@@ -5,7 +5,7 @@ import path from 'node:path';
 import os from 'node:os';
 
 const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
-const url = process.argv[2] || 'file:///D:/2026/zhu-combined/vcpp-kepan.html#u=38';
+const url = process.argv[2] || 'file:///D:/2026/vcpp/vcpp.html#u=38';
 const port = 14700 + Math.floor(Math.random() * 300);
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-notes-'));
 const child = spawn(EDGE, ['--headless=new', '--disable-gpu', `--remote-debugging-port=${port}`,

@@ -6,7 +6,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
-const url = process.argv[2] || 'file:///D:/2026/zhu-combined/vcpp-kepan.html';
+const url = process.argv[2] || 'file:///D:/2026/vcpp/vcpp.html';
 const IDLE = (process.argv[3] || 3) * 1000;
 const port = 20800 + Math.floor(Math.random() * 200);
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-stable-'));

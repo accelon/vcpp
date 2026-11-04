@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import zlib from 'node:zlib';
 
-const file = process.argv[2] || 'vcpp-kepan.html';
+const file = process.argv[2] || 'vcpp.html';
 const h = fs.readFileSync(file, 'utf8');
 const i = h.indexOf('id="zhu-b64"');
 const s = h.indexOf('>', i) + 1;

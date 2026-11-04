@@ -1,11 +1,11 @@
 # 科文（科判）：江味農、印順
 
-`vcpp-kepan.html` 是《金剛經合注》的**科文版**單檔：經文、十一種別譯、四十一家注疏
+`vcpp.html` 是《金剛經合注》的單檔（科文版）：經文、十一種別譯、四十一家注疏
 都在，另外多了兩家的科判（江味農《金剛般若波羅蜜經講義》、印順《般若經講記》），
 而且科文與經文可以互相跳。
 
 ```text
-vcpp-kepan.html            產物（node build-vcpp-kepan.mjs 生成，約 2.9 MB）
+vcpp.html                  產物（node build.mjs 生成，約 3.1 MB）
 kepan/
   zhaoming.json            昭明三十二分（32 節，經文本身的段落；預設）
   jiang.json               江味農科判（349 節，源頭：DILA／CBETA 補編 B23）
@@ -174,7 +174,7 @@ build/cdp-kepan.mjs        無頭瀏覽器驗收（20 項）＋截圖
   原本經文最上面那條 `.chapter-nav` 用 CSS 收起，`#sec-select` 也藏起來，
   兩者都還在 DOM 裡（App 的狀態照舊），只是不再顯示。
   這些隱藏規則都掛在 `body.kb-layer` 上，所以 `?kepan=off` 時下拉與經文那條分導覽會照舊回來。
-- 深連結：`vcpp-kepan.html?kepan=jiang&k=283`（`k` 是節點 id）、`#u=38` 照舊。
+- 深連結：`vcpp.html?kepan=jiang&k=283`（`k` 是節點 id）、`#u=38` 照舊。
   換家用下拉，選擇記在 localStorage；`?kepan=off` 把整層關掉。
 - 快捷鍵：`Ctrl/⌘+Alt+K` 顯示／收起科判條；`Esc` 收浮層。
 
@@ -318,14 +318,15 @@ node build/kepan/build.mjs          # → kepan/kepan-data.js
 node build/kepan/audit.mjs          # 資料檢查（不通過會 exit 1）
 
 # 3. 單檔
-node build-vcpp-kepan.mjs           # → vcpp-kepan.html（約 2.9 MB）
-node build-vcpp-kepan.mjs --limit 40000   # 輕量版
+node build.mjs                      # → vcpp.html（約 3.1 MB，含 PWA）
+node build.mjs --limit 40000        # 輕量版
 
 # 4. 驗收（Edge 無頭，20 項＋截圖到 screenshots/）
 node build/cdp-kepan.mjs
 ```
 
-`build-vcpp-kepan.mjs` 只讀舊檔、不改舊檔；`vcpp.html` 仍由原本的 `build-vcpp.mjs` 產生。
+`build.mjs` 只讀閱讀器程式與本區資料，產物就是部署用的 `vcpp.html`；
+舊的無科判版 `vcpp-nokepan.html` 已凍結，不再建置。
 
 ## 六、再加一家科文
 

@@ -6,7 +6,7 @@ import path from 'node:path';
 import os from 'node:os';
 
 const EDGE = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
-const url = process.argv[2] || 'file:///D:/2026/zhu-combined/vcpp-kepan.html';
+const url = process.argv[2] || 'file:///D:/2026/vcpp/vcpp.html';
 const W = +(process.argv[3] || 1280);
 const H = +(process.argv[4] || 900);
 const port = 14400 + Math.floor(Math.random() * 300);

@@ -1,10 +1,10 @@
 // 單檔體積拆解：把 zhu-b64 裡的資料按「邏輯部分」拆開，各自 gzip 估一份，
 // 讓作者決定要砍什麼。
-//   node build/size-report.mjs [vcpp-kepan.html]
+//   node build/size-report.mjs [vcpp.html]
 import fs from 'node:fs';
 import zlib from 'node:zlib';
 
-const file = process.argv[2] || 'vcpp-kepan.html';
+const file = process.argv[2] || 'vcpp.html';
 const html = fs.readFileSync(file, 'utf8');
 const m = /<script id="zhu-b64" type="text\/plain">([\s\S]*?)<\/script>/.exec(html);
 if (!m) throw new Error('找不到 zhu-b64');

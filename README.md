@@ -3,9 +3,9 @@
 一個純靜態的《金剛經》對讀站：**羅什主文**（昭明三十二分）＋ **41 家注疏** ＋ **梵藏逐詞** ＋ **11 種別譯**。
 直接開 `index.html` 就能用（不需要伺服器）。
 
-- 線上：<https://shutonggui.cn/huixintang/>（鏡像 <https://nissaya.cn/huixintang/>）
+- 線上：<https://shutonggui.cn/incubator/vcpp.html>（鏡像 <https://nissaya.cn/incubator/vcpp.html>）
 - 本區（內容／資料／部署）：<https://github.com/accelon/vcpp>
-- 閱讀器（程式本體）：<https://github.com/accelon/zhu-combined>（`dev` 分支起）
+- 閱讀器（程式本體）：<https://github.com/accelon/zhu-combined>（`dev` 分支起；2026-11-04 起資料分離）
 
 ## 這個工作區是什麼
 
@@ -157,13 +157,12 @@ bun run build/research.ts
 # 3b. 操作導覽（改了 tours/*.tour 才需要；單檔會內嵌 tour.js）
 bun run build-tour.mjs
 
-# 4. 單檔（全部全文；上限 8MB，可 --max 放寬）
+# 4. 單檔（全部全文＋PWA；上限 8MB，可 --max 放寬）
 #    build.mjs 會呼叫閱讀器（D:\2026\zhu-combined）的打包器，資料讀本區：
-node build.mjs                      # → vcpp-kepan.html、vcpp-nokepan.html
+node build.mjs                      # → vcpp.html、vcpp.webmanifest、sw.js、icon-*.png
 node build.mjs --limit 40000        # 輕量版，約 1.6MB
-# 也可以直接叫打包器（cwd 要在本區）：
-node ..\zhu-combined\build-vcpp.mjs --out vcpp-nokepan.html
-node ..\zhu-combined\build-vcpp-kepan.mjs
+# 也可以直接叫打包器（cwd 要在本區；--out 指成品、--start 是 PWA 的 start_url）：
+node ..\zhu-combined\build-vcpp-kepan.mjs --out vcpp.html --start vcpp.html
 ```
 
 ## 書名與副標（meta）
@@ -195,7 +194,7 @@ bun run build-tour.mjs            # tours/*.tour → src/tour/tour-data.ts，再
 bun run build-tour.mjs --check    # 發版前：tour-data 與 tour.js 是否都是最新的
 
 # 自動走完整場（手機視窗），印出每一幕的 spotlight 與 failed
-node build/cdp-tour.mjs "file:///D:/2026/zhu-combined/index.html" 390 844 out-tour
+node ..\zhu-combined\build\cdp-tour.mjs "file:///D:/2026/vcpp/vcpp.html" 390 844 out-tour
 ```
 
 劇本要用的新動作，要同時加在 `src/tour/app.ts` 的 `call()` 與 `tour.config.ts` 的 `callNames`／`apiKeys`，
@@ -204,7 +203,7 @@ node build/cdp-tour.mjs "file:///D:/2026/zhu-combined/index.html" 390 844 out-to
 ## 微信長圖（使用導覽／研究示例）
 
 兩張長圖，同一套樣式（`build/series/series.css`）；都用 390×844 的手機實拍截圖排成 1080 寬，
-適合微信長圖轉發，頁腳都帶 <https://shutonggui.cn/huixintang/vcpp.html>。
+適合微信長圖轉發，頁腳都帶 <https://shutonggui.cn/incubator/vcpp.html>。
 
 | 檔案 | 內容 | 尺寸 |
 |---|---|---|

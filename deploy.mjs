@@ -9,7 +9,7 @@
 //   node deploy.mjs --mirror-only
 //   node deploy.mjs --max 16    # vcpp.html 大小上限（MiB，預設 8）
 //
-// 只換 /incubator/ 底下的 vcpp.html（＝vcpp-kepan.html）、vcpp.html.gz、shuzheng-u38.md。
+// 只換 /incubator/ 底下的 vcpp.html、vcpp.html.gz、shuzheng-u38.md、PWA 四檔。
 // /incubator/vcpp-nokepan.html 是舊的無科判版，**凍結不動**（2026-11-04 作者指示）。
 //
 // 連線憑證在 D:\2026\vcpp\.local\server.env 與 hostkey*.txt，
@@ -101,11 +101,11 @@ if (MIRROR_ONLY && !env.MIRROR_HOST) die('server.env 沒有 MIRROR_HOST');
 if (!fs.existsSync(PSCP) || !fs.existsSync(PLINK)) die('找不到 PuTTY pscp.exe／plink.exe');
 
 // local → remote 名稱（都放在 /incubator/ 底下，不碰 index.html）
-//   vcpp.html          科判版（正式入口）
+//   vcpp.html          科判版（正式入口，建置產物就叫這個名字）
 //   shuzheng-u38.md    第 38 句的書證長文（頁面裡連得到）
 // 舊的 vcpp-nokepan.html 不維護也不重傳（線上那份保持原樣）。
 const FILES = [
-  { local: 'vcpp-kepan.html', remote: 'vcpp.html' },
+  { local: 'vcpp.html', remote: 'vcpp.html' },
   // PWA：manifest、service worker、圖示（與 html 同目錄，start_url 指 vcpp.html）
   { local: 'vcpp.webmanifest', remote: 'vcpp.webmanifest' },
   // nokepan 已凍結（不重傳），manifest 也不上傳
@@ -176,9 +176,9 @@ function deploy(t) {
 
     // 順便產生預先壓好的 vcpp.html.gz（給「直接送 .gz」的設定用；mod_deflate 已開也可並存）
     const gzTmp = path.join(os.tmpdir(), `.vcpp-${process.pid}.html.gz`);
-    const gzBuf = zlib.gzipSync(fs.readFileSync(path.join(ROOT, 'vcpp-kepan.html')), { level: 9 });
+    const gzBuf = zlib.gzipSync(fs.readFileSync(path.join(ROOT, 'vcpp.html')), { level: 9 });
     fs.writeFileSync(gzTmp, gzBuf);
-    console.log(`  預壓 vcpp.html.gz ${gzBuf.length.toLocaleString('en-US')} bytes（原 ${fs.statSync(path.join(ROOT, 'vcpp-kepan.html')).size.toLocaleString('en-US')}）`);
+    console.log(`  預壓 vcpp.html.gz ${gzBuf.length.toLocaleString('en-US')} bytes（原 ${fs.statSync(path.join(ROOT, 'vcpp.html')).size.toLocaleString('en-US')}）`);
 
     tr.remote([
       'set -e',
@@ -192,7 +192,7 @@ function deploy(t) {
       tr.upload(path.join(ROOT, f.local), t.docroot + '/.tmp-' + f.remote);
     }
     const localMd5 = {
-      'vcpp.html': md5(fs.readFileSync(path.join(ROOT, 'vcpp-kepan.html'))),
+      'vcpp.html': md5(fs.readFileSync(path.join(ROOT, 'vcpp.html'))),
       'vcpp.html.gz': md5(gzBuf),
     };
     tr.upload(gzTmp, t.docroot + '/.tmp-vcpp.html.gz');
@@ -234,7 +234,7 @@ async function verify(t) {
   const stamp = Date.now();
   const hasKepan = (s) => s.includes('kbTrail') && s.includes('KEPAN');
   const checks = [
-    ['vcpp.html', (s) => s.includes('金剛經合注') && s.includes('zhu-b64') && hasKepan(s)],
+    ['vcpp.html', (s) => s.includes('金剛經合注') && s.includes('zhu-b64') && hasKepan(s) && s.includes('vcpp.webmanifest')],
     // 凍結的舊版：只確認還在、仍是無科判版（不重傳、不改）
     ['vcpp-nokepan.html', (s) => s.includes('金剛經合注') && s.includes('zhu-b64') && !hasKepan(s)],
     ['shuzheng-u38.md', (s) => s.length > 1000],
@@ -246,7 +246,7 @@ async function verify(t) {
     const isGz = buf[0] === 0x1f && buf[1] === 0x8b;
     // Node 的 fetch 會自動解壓：伺服器送 Content-Encoding: gzip 時拿到的就是 HTML 本體
     const isHtml = buf.includes(Buffer.from('zhu-b64')) && buf.includes(Buffer.from('__startApp'));
-    const plainSize = fs.statSync(path.join(ROOT, 'vcpp-kepan.html')).size;
+    const plainSize = fs.statSync(path.join(ROOT, 'vcpp.html')).size;
     if (!res.ok) die('驗證失敗 ' + gzUrl + ' → HTTP ' + res.status);
     if (!isGz && !isHtml) die('vcpp.html.gz 內容不對（' + buf.length + ' bytes）');
     if (isHtml && buf.length !== plainSize) die('vcpp.html.gz 解壓後大小不符：' + buf.length + ' ≠ ' + plainSize);
@@ -261,6 +261,28 @@ async function verify(t) {
     if (/^vcpp(?:-.*)?\.html$/.test(name) && Buffer.byteLength(text) > MAX_MB * 1024 * 1024) die(name + ' 超過 ' + MAX_MB + 'MB：' + Buffer.byteLength(text) + '（可用 --max 放寬）');
     console.log('✓ ' + url + '  HTTP ' + res.status + '  ' + Buffer.byteLength(text) + ' bytes');
   }
+  // PWA：manifest、service worker、圖示都要在同一目錄，而且真的是可用的內容
+  {
+    const manUrl = t.base + 'vcpp.webmanifest?v=' + stamp;
+    const res = await fetch(manUrl, { cache: 'no-store' });
+    const txt = await res.text();
+    if (!res.ok) die('驗證失敗 ' + manUrl + ' → HTTP ' + res.status);
+    let man;
+    try { man = JSON.parse(txt); } catch (e) { die('vcpp.webmanifest 不是 JSON：' + txt.slice(0, 120)); }
+    if (!man.name || !man.start_url || !(man.icons || []).length) die('vcpp.webmanifest 缺 name／start_url／icons');
+    const ct = (res.headers.get('content-type') || '').toLowerCase();
+    console.log('✓ ' + manUrl + '  HTTP ' + res.status + '  ' + (ct || '(無 content-type)') +
+      '  start_url=' + man.start_url + '  icons=' + man.icons.length);
+    for (const name of ['sw.js', 'icon-192.png', 'icon-512.png']) {
+      const u = t.base + name + '?v=' + stamp;
+      const r = await fetch(u, { cache: 'no-store' });
+      const buf = Buffer.from(await r.arrayBuffer());
+      if (!r.ok) die('驗證失敗 ' + u + ' → HTTP ' + r.status);
+      if (name.endsWith('.png') && !(buf[0] === 0x89 && buf[1] === 0x50)) die(name + ' 不是 PNG');
+      if (buf.length < 500) die(name + ' 太小：' + buf.length + ' bytes');
+      console.log('✓ ' + u + '  HTTP ' + r.status + '  ' + (r.headers.get('content-type') || '') + '  ' + buf.length.toLocaleString('en-US') + ' bytes');
+    }
+  }
 }
 
 for (const t of chosen) {
@@ -274,7 +296,7 @@ for (const t of chosen) {
       const len = r.headers.get('content-length') || '?';
       const etag = r.headers.get('etag') || '';
       console.log(`  傳輸實測: content-encoding=${enc}  content-length=${len}  ${/gzip/.test(etag) ? 'ETag 帶 gzip' : ''}`);
-      const plain = fs.statSync(path.join(ROOT, 'vcpp-kepan.html')).size;
+      const plain = fs.statSync(path.join(ROOT, 'vcpp.html')).size;
       if (len === '?') console.log(`  → chunked（現壓，沒有 Content-Length）；原檔 ${plain.toLocaleString('en-US')} bytes`);
       else console.log(`  → 線上實際傳 ${(+len).toLocaleString('en-US')} bytes（原檔 ${plain.toLocaleString('en-US')}，省 ${(100 - (+len) / plain * 100).toFixed(1)}%）`);
     } catch (e) { console.log('  傳輸實測失敗：' + e.message); }

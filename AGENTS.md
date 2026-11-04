@@ -18,15 +18,15 @@
 
 - **產出**：純靜態《金剛經》對讀站——羅什主文（昭明三十二分）＋ 41 家注疏 ＋ 梵藏逐詞 ＋ 11 種別譯。
   - 開發版：`index.html` ＋ `app.js` ＋ `zhu-data.js`（`file://` 直接開，不需要伺服器）。
-  - 部署版：單檔 `vcpp.html`，CSS／JS／資料全部內嵌（gzip ＋ base64），由 `node build-vcpp.mjs` 產生。
+  - 部署版：單檔 `vcpp.html`，CSS／JS／資料全部內嵌（gzip ＋ base64），PWA（manifest／sw／圖示）同目錄，由 `node build.mjs` 產生。
 - **線上**：<https://shutonggui.cn/incubator/vcpp.html>（鏡像 <https://nissaya.cn/incubator/vcpp.html>）。
 - **來源**：
   - 專案檔案：2026-11-04 起由 `D:\2026\zhu-combined` 移入（作者親自搬；搬完舊區停用）。
   - 語料：`D:\2026\adb-converter\build`（`tei-all.txt`、`wxzj-tei-2026R2.txt`、`ys-text-full.txt`、
     `jingqun\*.tsv`）——**只讀**；可用 `$env:ZHU_CORPUS` 指向別處。
   - 原始 PDF／docx：`vendor\`（不進版控，來源見 `README.md`「資料來源」）。
-- **成品位置**：線上兩站；本機的 `vcpp.html`（含 `vcpp-kepan.html`、`vcpp-nokepan.html`）是建置產物，
-  **不進版控**，也不要留在 `out\`。
+- **成品位置**：線上兩站；本機的 `vcpp.html`（＋`vcpp.webmanifest`／`sw.js`／`icon-*.png`）是建置產物，
+  **不進版控**。`vcpp-nokepan.html` 是舊的無科判版，2026-11-04 起凍結（不建置、不上傳、不維護）。
 - **母工作區**：`D:\2026\adb-converter`（語料與 adb 規則、版本紀錄的家）。
 
 ## 2. 共用程式（不要重寫一份）
@@ -62,7 +62,8 @@
    > 不記在母區版本紀錄：母區那本記的是 adb 成品，本區產出是靜態站，混在一起查不到。
 2. **發布**：`node deploy.mjs` 上傳 `/var/www/html/incubator`，**只有作者明說才做**；發布後一定驗線上
    （HTTP 200、含 `金剛經合注`／`zhu-b64`／`__startApp`、≤ 8 MiB）。
-3. **`/incubator/` 是共用目錄**：只換 `vcpp.html`、`vcpp.html.gz`、`shuzheng-u38.md`；**不上傳 `index.html`**，
+3. **`/incubator/` 是共用目錄**：只換 `vcpp.html`、`vcpp.html.gz`、`vcpp.webmanifest`、`sw.js`、
+   `icon-192.png`、`icon-512.png`、`shuzheng-u38.md`；**不上傳 `index.html`**，
    不動 `projects.json`，不留 `.prev` 以外的備份。
    > ⚠️ `/huixintang/` 是官網工作區的目錄，2026-11-04 誤覆蓋過它的 `index.html`——不要往那裡寫。
 
