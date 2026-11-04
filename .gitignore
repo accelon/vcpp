@@ -1,0 +1,21 @@
+# 原始素材與本機檔案：不進版控
+vendor/
+.local/
+
+# 建置產物（node build-vcpp.mjs、build-vcpp-kepan.mjs 產生）
+vcpp*.html
+vcpp.html.gz
+
+# 資料管線的中間檔（可重跑產生）
+build/_pdf-u.json
+build/_conze-review.tsv
+build/series/_*
+build/__pycache__/
+__pycache__/
+*.log
+
+# 開發截圖／暫存
+screenshots/
+_backup/
+*.tmp
+Thumbs.db
