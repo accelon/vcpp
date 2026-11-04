@@ -30,7 +30,9 @@ const KEEP = 'Y01';
 const DESC = '羅什譯《金剛經》配昭明三十二分，十一種別譯、四十一家注疏、梵藏逐詞；' +
   '加上昭明／江味農／印順／宗密四套科判，科文與經文雙向連動，科文另存、離文標註。純靜態單頁。';
 
-run('build-vcpp.mjs', ['--out', path.join(HERE, 'vcpp-nokepan.html'),
+// --start：部署後的檔名（deploy 會把 vcpp-kepan.html 改名成 vcpp.html），PWA 的 start_url 要指對
+run('build-vcpp.mjs', ['--out', path.join(HERE, 'vcpp-nokepan.html'), '--start', 'vcpp-nokepan.html',
   '--title', TITLE, '--sub', SUB_PLAIN, '--keep', KEEP, ...extra]);
-run('build-vcpp-kepan.mjs', ['--title', TITLE, '--sub', SUB_KEPAN, '--desc', DESC, '--keep', KEEP, ...extra]);
+run('build-vcpp-kepan.mjs', ['--start', 'vcpp.html',
+  '--title', TITLE, '--sub', SUB_KEPAN, '--desc', DESC, '--keep', KEEP, ...extra]);
 console.log('完成：vcpp-nokepan.html、vcpp-kepan.html');

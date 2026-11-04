@@ -1,4 +1,4 @@
-// 部署 zhu-combined 到：
+// 部署 vcpp 單檔到：
 //   主站 https://shutonggui.cn/incubator/vcpp.html
 //   鏡像 https://nissaya.cn/incubator/vcpp.html
 //
@@ -9,9 +9,12 @@
 //   node deploy.mjs --mirror-only
 //   node deploy.mjs --max 16    # vcpp.html 大小上限（MiB，預設 8）
 //
-// 連線憑證沿用 D:\2026\adb-converter\.local\server.env 與 hostkey*.txt，
+// 只換 /incubator/ 底下的 vcpp.html（＝vcpp-kepan.html）、vcpp.html.gz、shuzheng-u38.md。
+// /incubator/vcpp-nokepan.html 是舊的無科判版，**凍結不動**（2026-11-04 作者指示）。
+//
+// 連線憑證在 D:\2026\vcpp\.local\server.env 與 hostkey*.txt，
 // 帳密不會被印出。docroot 預設由 server.env 的 DOCROOT 推得：
-//   /var/www/html/accelon26 → /var/www/html/huixintang
+//   /var/www/html/accelon26 → /var/www/html/incubator
 // 可用 --docroot / --mirror-docroot 覆寫。
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -99,11 +102,16 @@ if (!fs.existsSync(PSCP) || !fs.existsSync(PLINK)) die('找不到 PuTTY pscp.exe
 
 // local → remote 名稱（都放在 /incubator/ 底下，不碰 index.html）
 //   vcpp.html          科判版（正式入口）
-//   vcpp-nokepan.html  舊的無科判版
 //   shuzheng-u38.md    第 38 句的書證長文（頁面裡連得到）
+// 舊的 vcpp-nokepan.html 不維護也不重傳（線上那份保持原樣）。
 const FILES = [
   { local: 'vcpp-kepan.html', remote: 'vcpp.html' },
-  { local: 'vcpp-nokepan.html', remote: 'vcpp-nokepan.html' },
+  // PWA：manifest、service worker、圖示（與 html 同目錄，start_url 指 vcpp.html）
+  { local: 'vcpp.webmanifest', remote: 'vcpp.webmanifest' },
+  // nokepan 已凍結（不重傳），manifest 也不上傳
+  { local: 'sw.js', remote: 'sw.js' },
+  { local: 'icon-192.png', remote: 'icon-192.png' },
+  { local: 'icon-512.png', remote: 'icon-512.png' },
   { local: 'shuzheng-u38.md', remote: 'shuzheng-u38.md' },
 ];
 
@@ -227,6 +235,7 @@ async function verify(t) {
   const hasKepan = (s) => s.includes('kbTrail') && s.includes('KEPAN');
   const checks = [
     ['vcpp.html', (s) => s.includes('金剛經合注') && s.includes('zhu-b64') && hasKepan(s)],
+    // 凍結的舊版：只確認還在、仍是無科判版（不重傳、不改）
     ['vcpp-nokepan.html', (s) => s.includes('金剛經合注') && s.includes('zhu-b64') && !hasKepan(s)],
     ['shuzheng-u38.md', (s) => s.length > 1000],
   ];
@@ -249,7 +258,7 @@ async function verify(t) {
     const text = await res.text();
     if (!res.ok) die('驗證失敗 ' + url + ' → HTTP ' + res.status);
     if (!check(text)) die('內容不正確 ' + url + '（' + Buffer.byteLength(text) + ' bytes）');
-    if (/^vcpp-.*.html$/.test(name) && Buffer.byteLength(text) > MAX_MB * 1024 * 1024) die(name + ' 超過 ' + MAX_MB + 'MB：' + Buffer.byteLength(text) + '（可用 --max 放寬）');
+    if (/^vcpp(?:-.*)?\.html$/.test(name) && Buffer.byteLength(text) > MAX_MB * 1024 * 1024) die(name + ' 超過 ' + MAX_MB + 'MB：' + Buffer.byteLength(text) + '（可用 --max 放寬）');
     console.log('✓ ' + url + '  HTTP ' + res.status + '  ' + Buffer.byteLength(text) + ' bytes');
   }
 }
