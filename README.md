@@ -166,6 +166,16 @@ node ..\zhu-combined\build-vcpp.mjs --out vcpp-nokepan.html
 node ..\zhu-combined\build-vcpp-kepan.mjs
 ```
 
+## 書名與副標（meta）
+
+閱讀器不寫死書名；資料裡的 `meta` 決定標題列：
+
+```json
+"meta": { "title": "金剛經合注", "sub": "…", "links": { "38": { "href": "shuzheng-u38.md", "text": "書證" } } }
+```
+
+`build/build-data.ts` 會輸出這段；`build.mjs` 打包時再用 `--title/--sub/--desc` 覆寫（副標兩版不同）。
+
 ## 操作導覽（🦮）
 
 標題列最右邊的 **🦮**（`#tourEntry`，`aria-label="操作導覽"`，跟 ☾ 同尺寸）就是入口。
