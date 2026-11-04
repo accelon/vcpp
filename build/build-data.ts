@@ -17,7 +17,8 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 
 const CORPUS = process.env.ZHU_CORPUS || 'D:\\2026\\adb-converter\\build';
 const VCPP = 'D:\\2023\\yonglezang\\ylz-prjn.offtext\\';
-const OUT_DIR = 'D:\\2026\\zhu-combined';
+// 資料寫到本工作區（閱讀器是 data-neutral 的，不含任何經群資料）
+const OUT_DIR = process.env.VCPP_ROOT || 'D:\\2026\\vcpp';
 
 const TAG = /\^[a-z_]+[0-9]*(?:[#@:.\/~|-][^\s【〔「『（(《<]*)?(?:<[^>]*>)?(?:[【〔「『（(][^】〕」』）)]*[】〕」』）)])?/g;
 const HEADING = /^[〔【（(]?[^\s，。！？；：、]{1,7}分第[一二三四五六七八九十]+[〕】）)]?/;
@@ -614,6 +615,11 @@ console.log('pdf entries', pdfOut.length, 'mapped', pdfOut.filter((e) => e.u >= 
 
 const data = {
   generated: new Date().toISOString(),
+  // 書名與副標：閱讀器用它填標題（不寫死在閱讀器裡）
+  meta: {
+    title: '金剛經合注',
+    sub: '姚秦 鳩摩羅什譯 · 別譯十一種 · 四十一家注疏 · 昭明三十二分',
+  },
   sections: fen.map((f) => ({ n: f.n, title: f.title })),
   versions: versions.map((v) => ({
     id: v.id, label: v.label, trans: v.trans, group: v.group || 'guyi', lang: v.lang || 'zh',

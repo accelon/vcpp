@@ -85,6 +85,7 @@ for (const f of files) {
     order: typeof raw.order === 'number' ? raw.order : 99,
     ordStyle: raw.ordStyle || '',
     workId: raw.workId || '',
+    base: !!raw.base,
     flat: raw.flat ? 1 : 0,
     short: raw.short,
     title: raw.title,
