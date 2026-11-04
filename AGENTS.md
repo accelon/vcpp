@@ -35,7 +35,8 @@
 |---|---|
 | 語料／漢字／頁座標／VA 等 adb 工具 | `D:\2026\adb-converter\ts\`；缺東西**回母區補** |
 | 操作導覽引擎 | 已 vendored 在 `src\tour\`（來源與版本見 `src\tour\VENDOR.md`） |
-| 單檔打包／部署 | 本區 `build-vcpp.mjs`、`deploy.mjs`、`deploy-incubator.mjs` |
+| 單檔打包 | **閱讀器** `D:\2026\zhu-combined\build-vcpp.mjs`／`build-vcpp-kepan.mjs`（程式讀閱讀器目錄、資料讀本區）；本區只留 `build.mjs` 包裝
+| 部署 | 本區 `deploy.mjs`、`deploy-incubator.mjs`（憑證在 `.local\`） |
 
 發現共用 helper 有問題，回母區或 agent-norms 修；新增一份等價實作前，先問作者。
 
@@ -46,7 +47,7 @@
 ② 資料管線：bun run build/build-data.ts → zhu-data.js
    （Conze／今譯／中台／成觀／Muller 的抽取與對齊見 README「重建」）
 ③ 改前端：index.html／app.js／style.css；導覽改 tours\*.tour 後跑 bun run build-tour.mjs
-④ 單檔：node build-vcpp.mjs（預設收全部全文，約 2.7MB；--limit 40000 是輕量版）
+④ 單檔：node build.mjs（叫閱讀器的打包器；預設收全部全文，約 3MB；--limit 40000 是輕量版）
 ⑤ 部署：node deploy.mjs --check → node deploy.mjs（**只有作者明說才做**）
 ⑥ 驗證＋記帳
 ```
