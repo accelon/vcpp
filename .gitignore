@@ -19,3 +19,7 @@ screenshots/
 _backup/
 *.tmp
 Thumbs.db
+# 導覽回放／截圖輸出（開發產物）
+build/_tour-out/
+build/_*.png
+build/_*.json
