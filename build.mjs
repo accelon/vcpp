@@ -20,6 +20,11 @@ const run = (script, args) => {
   if (r.status !== 0) process.exit(r.status || 1);
 };
 
-run('build-vcpp.mjs', ['--out', path.join(HERE, 'vcpp-nokepan.html'), ...extra]);
-run('build-vcpp-kepan.mjs', extra);
+// 書名／副標：內容工作區決定（閱讀器本身是中性的）
+const TITLE = '金剛經合注';
+const SUB_PLAIN = '姚秦 鳩摩羅什譯 · 別譯十一種 · 四十一家注疏 · 昭明三十二分';
+const SUB_KEPAN = '11 種別譯 · 41 家注疏 · 3 家科判';
+
+run('build-vcpp.mjs', ['--out', path.join(HERE, 'vcpp-nokepan.html'), '--title', TITLE, '--sub', SUB_PLAIN, ...extra]);
+run('build-vcpp-kepan.mjs', ['--title', TITLE, '--sub', SUB_KEPAN, ...extra]);
 console.log('完成：vcpp-nokepan.html、vcpp-kepan.html');
