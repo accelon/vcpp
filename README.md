@@ -15,7 +15,7 @@
 | 在本區 | 說明 |
 |---|---|
 | `zhu-data.js` | 閱讀器要的資料（`window.ZHU`）；由 `bun run build/build-data.ts` 產生 |
-| `kepan/` | 科判資料與產生器（`kepan-data.js` 由 `node build/kepan/build.mjs` 合成） |
+| `kepan/` | 科判資料（`kepan-data.js` 由閱讀器的 `node D:\2026\zhu-combined\build\kepan\build.mjs --root D:\2026\vcpp` 合成） |
 | `*.json`（conze／muller／jinyi…） | 別譯抽取與對齊的中間／成品 |
 | `build/` | 清洗與對齊腳本（Python／TypeScript／MJS） |
 | `vendor/`（不進版控） | 原始 PDF／docx |
@@ -37,7 +37,8 @@
 - **欄寬可拖**：兩條分隔線可左右拖曳，雙擊還原；寬度記在 localStorage。
 - **快速開關**：`Ctrl+Alt+B` 開關注疏欄（Mac 用 ⌘，原本標題列的 ☷ 按鈕已移除）。
 - **明暗切換**：右上角 ☾／☀；跟隨系統 `prefers-color-scheme`，選擇存在 localStorage。也可用 `?theme=dark`／`?theme=light`。
-- **科判不收**：科判（X466、X491）不是注疏，不列入面板；江味農分科亦不採用。
+- **科判五套**：昭明三十二分（預設、單層）／江味農（349 節，最深 18 層）／印順（104 節）／宗密《金剛經疏記科會》（1038 節）／十八住處（99 節，無著《金剛般若論》系）。條、目錄浮層、經文標記與互相跳轉在閱讀器的 `src/kepan/`；資料是 `kepan/<家>.json`，由 `node D:\2026\zhu-combined\build\kepan\build.mjs --root D:\2026\vcpp` 合成 `kepan/kepan-data.js`。十八住處這家的來源是幕布文檔（<https://mubu.com/explore/5EzhFDPiNin>）：本區 `build/fetch-mubu.mjs` 抓全文，閱讀器 `build/kepan/mubu.mjs` 抽科判並釘到經文（簡轉繁用 `s2t.py`／opencc）。
+- **科判不進注疏面板**：科判（X466、X491）是分科不是注文，只出現在科判層，不列入右欄作者列。
 
 ## 直接連結
 
@@ -162,7 +163,7 @@ bun run build-tour.mjs
 node build.mjs                      # → vcpp.html、vcpp.webmanifest、sw.js、icon-*.png
 node build.mjs --limit 40000        # 輕量版，約 1.6MB
 # 也可以直接叫打包器（cwd 要在本區；--out 指成品、--start 是 PWA 的 start_url）：
-node ..\zhu-combined\build-vcpp-kepan.mjs --out vcpp.html --start vcpp.html
+node ..\zhu-combined\build-kepan.mjs --root D:\2026\vcpp --out vcpp.html --start vcpp.html
 ```
 
 ## 書名與副標（meta）

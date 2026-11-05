@@ -97,7 +97,8 @@ const edCount = await raweval("document.getElementById('kbEd').options.length");
 const edNow = await raweval("document.getElementById('kbEd').selectedOptions[0].textContent");
 const flatMarks = await raweval("document.querySelectorAll('#reader .kb-mark').length");
 console.log('  家：', edCount, edNow, '（單層科判不插標記：' + flatMarks + '）');
-check('家選單有四家（昭明、江味農、印順、宗密科會）', edCount === 4);
+check('家選單有五家（昭明、江味農、印順、宗密科會、十八住）', edCount === 5);
+check('選單裡有十八住', await raweval("Array.from(document.getElementById('kbEd').options).some(o=>o.textContent.indexOf('十八住')>=0)"));
 check('預設是昭明', edNow === '昭明');
 check('昭明是單層：經文不插科文標記', flatMarks === 0);
 check('昭明也有深度字色（整分一色）', (await raweval("document.querySelectorAll('#reader .kb-t').length")) > 0);
@@ -213,6 +214,31 @@ const barAfter = await raweval("document.getElementById('kbTrail').innerText");
 console.log('  條：', JSON.stringify(barBefore), '→', JSON.stringify(barAfter));
 check('點科文標記會聯動條', clicked === true && barAfter === barBefore);
 await shot('kepan-12-notes.png');
+
+// 3c. 十八住處（新增第五家）：18 住都釘到經文、深層節點跳得到
+console.log('— 十八住處科判');
+await raweval("(function(){var s=document.getElementById('kbEd'); var eds=window.ZHU_KEPAN.editions; var ix=-1; for(var i=0;i<eds.length;i++) if(eds[i].id==='shiba') ix=i; s.value=String(ix); s.dispatchEvent(new Event('change'));})()");
+await sleep(600);
+const shiba = JSON.parse(await raweval(`(function(){
+  var e = window.ZHU_KEPAN.editions.filter(function(x){ return x.id === 'shiba'; })[0];
+  var zhu = e.nodes.filter(function(n){ return n.lv === 1 && n.nm; });
+  var deep = null;
+  e.nodes.forEach(function(n){ if(n.lv >= 8 && (!deep || n.lv > deep.lv)) deep = n; });
+  return JSON.stringify({ nodes: e.nodes.length, roots: e.roots.length, zhu: zhu.map(function(n){ return n.lab + n.nm; }), deep: deep });
+})()`));
+console.log('  節點', shiba.nodes, '根', shiba.roots, '三分：', shiba.zhu.join(' / '));
+console.log('  最深節點：', shiba.deep.lv, shiba.deep.lab + shiba.deep.nm, 'u' + shiba.deep.u + '.' + shiba.deep.off);
+check('十八住處有三根（序分／正宗分／流通分）', shiba.roots === 3 && shiba.zhu.length === 3);
+await raweval(`window.ZHU_KEPAN.go(${shiba.deep.id})`);
+await sleep(700);
+const sTrail = await raweval("document.getElementById('kbTrail').innerText");
+const sInView = await raweval(`(function(){var e=document.querySelector('#reader .sent[data-u="${shiba.deep.u}"]'); if(!e) return 'no-el'; var r=e.getBoundingClientRect(); return (r.top>=0 && r.top<window.innerHeight) ? 'yes' : 'no:'+Math.round(r.top);})()`);
+const sMarks = await raweval("document.querySelectorAll('#reader .kb-mark').length");
+console.log('  條：', JSON.stringify(sTrail), '；目標句在視窗內：', sInView, '；標記數：', sMarks);
+check('跳到最深節點：條顯示科名', (sTrail || '').indexOf((shiba.deep.nm || '').slice(0, 2)) >= 0);
+check('跳到最深節點：目標句到眼前', sInView === 'yes');
+check('十八住處也有科文標記', sMarks > 0);
+await shot('kepan-13-shiba.png');
 
 // 4. 目錄浮層
 console.log('— 目錄浮層');

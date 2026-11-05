@@ -24,12 +24,12 @@ const run = (script, args) => {
 
 // 書名／副標：內容工作區決定（閱讀器本身是中性的）
 const TITLE = '金剛經合注';
-const SUB = '11 種別譯 · 41 家注疏 · 3 家科判';
+const SUB = '11 種別譯 · 41 家注疏 · 4 家科判';
 
 // 輕量版要保留全文的 work（印順《般若經講記》）
 const KEEP = 'Y01';
 const DESC = '羅什譯《金剛經》配昭明三十二分，十一種別譯、四十一家注疏、梵藏逐詞；' +
-  '加上昭明／江味農／印順／宗密四套科判，科文與經文雙向連動，科文另存、離文標註。純靜態單頁。';
+  '加上昭明／江味農／印順／宗密／十八住處五套科判，科文與經文雙向連動，科文另存、離文標註。純靜態單頁。';
 
 // --start：PWA 的 start_url；成品就叫 vcpp.html，部署原樣上傳
 run('build-kepan.mjs', ['--out', path.join(HERE, 'vcpp.html'), '--start', 'vcpp.html',

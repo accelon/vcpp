@@ -35,7 +35,7 @@
 |---|---|
 | 語料／漢字／頁座標／VA 等 adb 工具 | `D:\2026\adb-converter\ts\`；缺東西**回母區補** |
 | 操作導覽引擎 | 已 vendored 在 `src\tour\`（來源與版本見 `src\tour\VENDOR.md`） |
-| 單檔打包 | **閱讀器** `D:\2026\zhu-combined\build-vcpp.mjs`／`build-vcpp-kepan.mjs`（程式讀閱讀器目錄、資料讀本區）；本區只留 `build.mjs` 包裝
+| 單檔打包 | **閱讀器** `D:\2026\zhu-combined\build-vcpp.mjs`／`build-kepan.mjs`（程式讀閱讀器目錄、資料讀本區）；本區只留 `build.mjs` 包裝
 | 部署 | 本區 `deploy.mjs`、`deploy-incubator.mjs`（憑證在 `.local\`） |
 
 發現共用 helper 有問題，回母區或 agent-norms 修；新增一份等價實作前，先問作者。
@@ -66,6 +66,8 @@
    `icon-192.png`、`icon-512.png`、`shuzheng-u38.md`；**不上傳 `index.html`**，
    不動 `projects.json`，不留 `.prev` 以外的備份。
    > ⚠️ `/huixintang/` 是官網工作區的目錄，2026-11-04 誤覆蓋過它的 `index.html`——不要往那裡寫。
+4. **發布規範**：進駐門檻、繁簡、背景與主題、`deploy/incubator.json`、部署與生命週期，一律照 canonical 的
+   `D:\2026\agent-norms\incubator.md`；本區不另存一份。
 
 ## 5. 文件
 
@@ -74,7 +76,7 @@
 | `README.md` | 來源、指令、成品、限制（給下一個接手的人） |
 | `deploy.md` | 部署目標、憑證位置、回滾、傳輸壓縮 |
 | `alignment-skill.md` | 新譯本對到句庫的做法 |
-| `KEPAN.md` | 科判版的來源與做法 |
+| `KEPAN.md`（已移回閱讀器） | 科判介面與資料格式見 `D:\2026\zhu-combined\KEPAN.md`；本區只留占位說明 |
 | `docs\build-log.md` | 每次建置一列 |
 
 - 決策紀錄：偏離 agent-norms 預設時，寫「為什麼」與「什麼情況改回來」。
@@ -99,9 +101,16 @@
 
 - [ ] `zhu-combined` 的檔案（除 `vendor\`、`.local\`、`vcpp*.html` 等產物）移到本區
 - [ ] 硬編碼路徑 `D:\2026\zhu-combined` → `D:\2026\vcpp`（`grep -r "zhu-combined"` 可查，約 20 個檔）：
-  `build-vcpp.mjs`、`build-vcpp-kepan.mjs`、`deploy.mjs`、`deploy-incubator.mjs`、`build\build-data.ts`、
-  `build\research.ts`、`build\sync-mirror.mjs`、`build\kepan\*.mjs`、`build\cdp-*.mjs`、`build\perf.mjs`、
+  `build-vcpp.mjs`、`build-kepan.mjs`、`deploy.mjs`、`deploy-incubator.mjs`、`build\build-data.ts`、
+  `build\research.ts`、`build\sync-mirror.mjs`、`D:\2026\zhu-combined\build\kepan\*.mjs`（已移回閱讀器）、`build\cdp-*.mjs`、`build\perf.mjs`、
   `build\shots-*.mjs`、`README.md`、`deploy.md`、`KEPAN.md`、`index.html`、`app.js`、`deploy\incubator.json`
 - [ ] `index.html` 的 `<title>` 改「金剛經合注 · vcpp」（`build-vcpp.mjs` 靠字串比對換標題）
 - [ ] `README.md` 的線上／原始碼連結改指 <https://github.com/accelon/vcpp>
 - [ ] 舊區 `D:\2026\zhu-combined`：README 標「已停用，維護看 vcpp」，推最後一個 commit
+
+---
+
+## 語義分句與軌號（canonical）
+
+指導性原則見 `D:\2026\agent-norms\shutonggui.md`（書同軌）：句級地址、最小切分、
+軌號（`track_id`）與 crosswalk。本區只放實作與資料，不另存一份原則再改。
